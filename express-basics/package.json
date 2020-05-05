@@ -1,7 +1,7 @@
 {
   "name": "express-basics",
   "version": "1.0.0",
-  "description": "Node.js course basics unit",
+  "description": "Node course express unit",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
