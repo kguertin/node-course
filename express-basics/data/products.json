@@ -1,1 +1,8 @@
-[{"title":"Lord of the Rings","imageUrl":"https://m.media-amazon.com/images/I/41gqJ6z++uL.jpg","description":"A Great Book!","price":"13.99"}]
+[
+  {
+    "title": "Lord of the Rings",
+    "imageUrl": "https://m.media-amazon.com/images/I/41gqJ6z++uL.jpg",
+    "description": "A Great Book!",
+    "price": "13.99"
+  }
+]
