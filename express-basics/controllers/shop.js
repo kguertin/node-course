@@ -38,6 +38,12 @@ exports.getCart = (req, res) => {
   })
 }
 
+exports.postCart = (req, res) => {
+  const prodId = req.body.productId;
+  console.log(prodId);
+  res.redirect('/cart');
+}
+
 exports.getOrders = (req, res) => {
   res.render('./shop/orders', {
     path: '/orders',
