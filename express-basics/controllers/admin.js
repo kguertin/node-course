@@ -58,3 +58,8 @@ exports.getProducts = (req, res) => {
     })
   })
 }
+
+exports.postDeleteProduct = (req, res) => {
+  prodId = req.body.productId;
+
+}
