@@ -8,6 +8,7 @@ const app = express();
 const errorController = require('./controllers/error');
 
 const sequelize = require('./util/database');
+
 const Product = require('./models/product');
 const User = require('./models/user');
 const Cart = require('./models/cart');
@@ -49,7 +50,7 @@ User.hasMany(Order);
 Order.belongsToMany(Product, { through: OrderItem });
 Product.belongsToMany(Order, { through: OrderItem });
 
-sequelize.sync({ force: true })
+sequelize.sync()
   .then(() => User.findByPk(1))
   .then(user => {
     if (!user) {
