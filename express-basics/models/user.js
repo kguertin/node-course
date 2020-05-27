@@ -52,18 +52,38 @@ class User {
       .catch(err => console.log(err))
   }
 
-  static findById(userId) {
+  getCart() {
     const db = getDb();
-    return db.collection('users')
-      .findOne({
-        _id: new mongodb.ObjectId(userId)
+    const productIds = this.cart.items.map(p => p.productId);
+    return db.collection('products')
+      .find({
+        _id: {
+          $in: productIds
+        }
       })
-      .then(user => {
-        console.log('user sent: ', user);
-        return user;
-      })
-      .catch(err => console.log(err));
-  }
-}
+      .toArray()
+      .then(products => {
+         return products.map(product => {
+            return { ...product,
+              quantity: this.cart.items.find(i => i.productId.toString() === product._id.toString()).quantity
+            };
+          })
+        })
+        .catch(err => console.log(err))
+      }
 
-module.exports = User
+    static findById(userId) {
+      const db = getDb();
+      return db.collection('users')
+        .findOne({
+          _id: new mongodb.ObjectId(userId)
+        })
+        .then(user => {
+          console.log('user sent: ', user);
+          return user;
+        })
+        .catch(err => console.log(err));
+    }
+  }
+
+  module.exports = User
