@@ -23,16 +23,19 @@ class User {
     //     })
     const updatedCart = {
       items: [{
-        ...product,
+        productId: new mongodb.ObjectId(product._id),
         quantity: 1
       }]
     };
     const db = getDb();
-    db.collection('users')
+    return db.collection('users')
       .updateOne({
         _id: new mongodb.ObjectId(this._id)
-      }, { $set: {cart: updatedCart}}
-                )
+      }, {
+        $set: {
+          cart: updatedCart
+        }
+      })
       .then()
       .catch(err => console.log(err))
   }
