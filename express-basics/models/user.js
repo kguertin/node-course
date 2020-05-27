@@ -63,27 +63,43 @@ class User {
       })
       .toArray()
       .then(products => {
-         return products.map(product => {
-            return { ...product,
-              quantity: this.cart.items.find(i => i.productId.toString() === product._id.toString()).quantity
-            };
-          })
+        return products.map(product => {
+          return { ...product,
+            quantity: this.cart.items.find(i => i.productId.toString() === product._id.toString()).quantity
+          };
         })
-        .catch(err => console.log(err))
-      }
-
-    static findById(userId) {
-      const db = getDb();
-      return db.collection('users')
-        .findOne({
-          _id: new mongodb.ObjectId(userId)
-        })
-        .then(user => {
-          console.log('user sent: ', user);
-          return user;
-        })
-        .catch(err => console.log(err));
-    }
+      })
+      .catch(err => console.log(err))
+  }
+  
+  deleteItemFromCart(prodId) {
+    const updatedCartItems = this.cart.items.filter(item => {
+      return item.productId.toString() !== prodId.toString();
+    });
+    const db = getDb();
+    return db.collection('users')
+      .updateOne({
+        _id: new mongodb.ObjectId(this._id)
+      }, {
+        $set: {
+          cart: {items: updatedCartItems}
+        }
+      })
+    
   }
 
-  module.exports = User
+  static findById(userId) {
+    const db = getDb();
+    return db.collection('users')
+      .findOne({
+        _id: new mongodb.ObjectId(userId)
+      })
+      .then(user => {
+        console.log('user sent: ', user);
+        return user;
+      })
+      .catch(err => console.log(err));
+  }
+}
+
+module.exports = User
