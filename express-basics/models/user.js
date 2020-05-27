@@ -21,7 +21,10 @@ class User {
       .findOne({
         _id: new mongodb.ObjectId(userId)
       })
-      .then(user => console.log(user))
+      .then(user => {
+      console.log('user sent: ', user);
+      return user;
+    })
       .catch(err => console.log(err));
   }
 }
