@@ -1,6 +1,7 @@
 const express = require('express');
 const {v4: uuidv4 }= require('uuid');
 const session = require('express-session');
+const FileStore = require('session-file-store')(session)
 
 const app = express();
 
@@ -10,6 +11,7 @@ app.use(session({
     console.log(req.sessionID)
     return uuidv4();
   },
+  store: new FileStore(),
   secret:'keyboard cat',
   resave: false,
   saveUninitialized: true
