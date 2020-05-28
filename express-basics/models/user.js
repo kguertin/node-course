@@ -71,7 +71,7 @@ class User {
       })
       .catch(err => console.log(err))
   }
-  
+
   deleteItemFromCart(prodId) {
     const updatedCartItems = this.cart.items.filter(item => {
       return item.productId.toString() !== prodId.toString();
@@ -82,10 +82,33 @@ class User {
         _id: new mongodb.ObjectId(this._id)
       }, {
         $set: {
-          cart: {items: updatedCartItems}
+          cart: {
+            items: updatedCartItems
+          }
         }
       })
-    
+  }
+
+  addOrder() {
+    const db = getDb();
+    return db.collection('orders')
+      .insertOne(this.cart)
+      .then(() => {
+        this.cart = {
+          items: []
+        };
+        return db.collection('users')
+          .updateOne({
+            _id: new mongodb.ObjectId(this._id)
+          }, {
+            $set: {
+              cart: {
+                items: []
+              }
+            }
+          })
+      })
+      .catch(err => console.log(err))
   }
 
   static findById(userId) {
