@@ -6,21 +6,26 @@ const session = require('express-session');
 const FileStore = require('session-file-store')(session)
 const bodyParser = require('body-parser');
 const passport = require('passport');
-const LocalStrategy = require('passport-local').strategy;
+const LocalStrategy = require('passport-local').Strategy;
 
 const users = [{
-  id: '2f24vvg', email: 'est@test.com', password: 'password'
+  id: '2f24vvg',
+  email: 'test@test.com',
+  password: 'password'
 }]
 
 // Configure passport.js to user local strategy
-passport.use(new LocalStrategy(
-  {usernameField: 'email'},
+passport.use(new LocalStrategy({
+    usernameField: 'email'
+  },
   (email, password, done) => {
     console.log('Inside Local Strategy callback');
     //Here we would make a call to our database to check user email and password
-    
+
     const user = users[0];
-    if(email === user.email && password === user.password) {
+  console.log(email,' === ', user.email);
+  console.log(password,' === ', user.password);
+    if (email === user.email && password === user.password) {
       console.log('Local strategy returned true.');
       return done(null, user);
     }
@@ -29,18 +34,20 @@ passport.use(new LocalStrategy(
 
 passport.serializeUser((user, done) => {
   console.log('Inside Serialization callback. User id is save to the session file here');
-  done(null, user.is)
+  done(null, user.id);
 })
 
 const app = express();
 
-app.use(bodyParser({urlencoded: false}));
+app.use(bodyParser({
+  urlencoded: false
+}));
 app.use(bodyParser.json());
 
 app.use(session({
   genid: (req) => {
     console.log('Inside the session middleware')
-    console.log(req.sessionID)
+    console.log('Request Object sessionID in clieht:', req.sessionID)
     return uuidv4();
   },
   store: new FileStore(),
@@ -73,7 +80,7 @@ app.post('/login', (req, res, next) => {
       console.log('inside the req.login() callback');
       console.log(`req.session.passport: ${JSON.stringify(req.session.passport)}`);
       console.log(`req.user: ${JSON.stringify(req.user)}`);
-    return res.send('You are authenticated and logged in');
+      return res.send('You are authenticated and logged in');
     })
   })(req, res, next);
 })
