@@ -23,8 +23,8 @@ passport.use(new LocalStrategy({
     //Here we would make a call to our database to check user email and password
 
     const user = users[0];
-  console.log(email,' === ', user.email);
-  console.log(password,' === ', user.password);
+    console.log(email, ' === ', user.email);
+    console.log(password, ' === ', user.password);
     if (email === user.email && password === user.password) {
       console.log('Local strategy returned true.');
       return done(null, user);
@@ -35,6 +35,13 @@ passport.use(new LocalStrategy({
 passport.serializeUser((user, done) => {
   console.log('Inside Serialization callback. User id is save to the session file here');
   done(null, user.id);
+})
+
+passport.deserializeUser((id, done) => {
+  console.log("Inside deserializeUser Callback");
+  console.log(`The user id passport saved in the session file store is: ${id}`);
+  const user = users[0].id === id ? users[0] : false;
+  done(null, user);
 })
 
 const app = express();
@@ -84,5 +91,16 @@ app.post('/login', (req, res, next) => {
     })
   })(req, res, next);
 })
+
+app.get('/authrequired', (req, res) => {
+  console.log('Inside GET /authrequired callback');
+  console.log(`User Authenticated? ${req.isAuthenticated()}`);
+  if (req.isAuthenticated()) {
+    res.send('you hit the authentication endpoint\n');
+  } else {
+    res.redirect('/');
+  }
+});
+
 
 app.listen(3000, () => console.log('Now Listening on Port 3000'));
