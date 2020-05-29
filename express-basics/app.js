@@ -2,11 +2,11 @@ const path = require('path');
 
 const express = require('express');
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
 
 const app = express();
 
 const errorController = require('./controllers/error');
-const mongoConnect = require('./util/database').mongoConnect;
 const User = require('./models/user');
 
 const adminRoutes = require('./routes/admin');
@@ -34,6 +34,6 @@ app.use(shopRoutes);
 
 app.use(errorController.get404);
 
-mongoConnect(() => {
-  app.listen(3000);
-});
+mongoose.connect('mongodb+srv://kevin:node1234@cluster0-kmmuu.mongodb.net/test?retryWrites=true&w=majority')
+  .then(() => app.listen(3000))
+  .catch(err => console.log(err));
