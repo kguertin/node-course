@@ -3,6 +3,7 @@ const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const session = require('express-session');
 
 const app = express();
 
@@ -20,6 +21,11 @@ app.use(bodyParser.urlencoded({
   extended: false
 }));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(session({
+  secret: 'my secret',
+  resave: false,
+  saveUninitialized: false
+}));
 
 app.use((req, res, next) => {
   User.findById('5ed17e8b0418670616aeb06e')
