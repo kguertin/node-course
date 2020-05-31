@@ -4,11 +4,18 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const session = require('express-session');
-
-const app = express();
+const MongoDBStore = require('connect-mongodb-session')(session);
 
 const errorController = require('./controllers/error');
 const User = require('./models/user');
+  
+const MONGODB_URI = 'mongodb+srv://kevin:node1234@cluster0-kmmuu.mongodb.net/shop';
+
+const app = express();
+const store = new MongoDBStore({
+  uri: MONGODB_URI,
+  collection: 'sessions'
+});
 
 const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
@@ -24,7 +31,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({
   secret: 'my secret',
   resave: false,
-  saveUninitialized: false
+  saveUninitialized: false,
+  store: store
 }));
 
 app.use((req, res, next) => {
@@ -42,7 +50,7 @@ app.use(authRoutes);
 
 app.use(errorController.get404);
 
-mongoose.connect('mongodb+srv://kevin:node1234@cluster0-kmmuu.mongodb.net/shop?retryWrites=true&w=majority')
+mongoose.connect(MONGODB_URI)
   .then(() => {
     User.findOne()
       .then(user => {
