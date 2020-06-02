@@ -7,8 +7,7 @@ exports.getProducts = (req, res) => {
       res.render('./shop/product-list', {
         prods: products,
         pageTitle: 'All Products',
-        path: '/products',
-        isAuthenticated: req.session.isLoggedIn,
+        path: '/products'
       });
     });
 }
@@ -21,8 +20,7 @@ exports.getProduct = (req, res) => {
       res.render('shop/product-detail', {
         product: product,
         pageTitle: product.title,
-        path: '/products',
-        isAuthenticated: req.session.isLoggedIn,
+        path: '/products'
       });
     })
     .catch(err => console.log(err));
@@ -47,8 +45,7 @@ exports.getCart = (req, res) => {
       res.render('./shop/cart', {
         path: '/cart',
         pageTitle: 'Your Cart',
-        products: products,
-        isAuthenticated: req.session.isLoggedIn,
+        products: products
       });
     })
     .catch(err => console.log(err))
@@ -92,7 +89,7 @@ exports.postOrder = (req, res) => {
       console.log(products)
       const order = new Order({
         user: {
-          name: req.sesssion.user.name,
+          email: req.user.email,
           userId: req.user
         },
         products: products
@@ -112,8 +109,7 @@ exports.getOrders = (req, res) => {
       res.render('./shop/orders', {
         path: '/orders',
         pageTitle: 'Your Orders',
-        orders: orders,
-        isAuthenticated: req.session.isLoggedIn,
+        orders: orders
       })
     })
     .catch(err => console.log(err))
@@ -122,7 +118,6 @@ exports.getOrders = (req, res) => {
 exports.getCheckout = (req, res) => {
   res.render('./shop/checkout', {
     path: '/checkout',
-    pageTitle: 'Checkout',
-    isAuthenticated: req.session.isLoggedIn,
+    pageTitle: 'Checkout'
   })
 }
