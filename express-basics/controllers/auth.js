@@ -1,5 +1,6 @@
 const crypto = require('crypto');
 
+require('dotenv').config()
 const bcrypt = require('bcryptjs');
 const nodemailer = require('nodemailer');
 const sendGridTransport = require('nodemailer-sendgrid-transport');
@@ -8,7 +9,7 @@ const User = require('../models/user');
 
 const transporter = nodemailer.createTransport(sendGridTransport({
   auth: {
-    api_key: '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'
+    api_key: process.env.EMAIL_API
   }
 }));
 
@@ -145,7 +146,7 @@ exports.postReset = (req, res) => {
       return res.redirect('/reset');
     }
     const token = buffer.toString('hex');
-    
+
     User.findOne({
         email: req.body.email
       })
@@ -162,7 +163,7 @@ exports.postReset = (req, res) => {
         res.redirect('/');
         transporter.sendMail({
           to: req.body.email,
-          from: 'kevin.m.guertin@gmail.com',
+          from: 'kguertin90@gmail.com',
           subject: 'Password Reset',
           html: `
             <p>You requested a password reset.</p>\
@@ -172,4 +173,31 @@ exports.postReset = (req, res) => {
       })
       .catch(err => console.log(err));
   })
+}
+
+exports.getNewPassword = (req, res) => {
+  const token = req.params.token;
+  User.findOne({
+      resetToken: token,
+      resetTokenExpiration: {
+        $gt: Date.now()
+      }
+    })
+    .then(user => {
+      let message = req.flash('error');
+
+      if (message.length > 0) {
+        message = message[0]
+      } else {
+        message = null;
+      }
+    
+      res.render('auth/new-password', {
+        path: '/new-password',
+        pageTitle: 'New Password',
+        errorMessage: message,
+        userId: user._id.toString()
+      })
+    })
+    .catch(err => console.log(err));
 }
