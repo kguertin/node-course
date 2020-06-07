@@ -13,7 +13,9 @@ router.get('/login', authController.getLogin);
 
 router.get('/signup', authController.getSignup);
 
-router.post('/login', authController.postLogin);
+router.post('/login', [body('email').isEmail().withMessage('Please Enter a Valid Email and Password'), body('password', 'Password has to be valid').isLength({
+  min: 5
+}).isAlphanumeric()], authController.postLogin);
 
 router.post('/signup', [
     check('email').isEmail().withMessage('Please enter a valid email.').custom((value, {
@@ -38,7 +40,7 @@ router.post('/signup', [
       req
     }) => {
       if (value !== req.body.password) {
-        throw new Error('Paswords have to match');
+        throw new Error('Passwords have to match');
       }
       return true;
     })
