@@ -84,9 +84,9 @@ exports.postLogin = (req, res) => {
 exports.postSignup = (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
-  const confirmPassword = req.body.confirmPassword;
+
   const errors = validationResult(req);
-  
+
   if (!errors.isEmpty()) {
     return res.status(422).render('auth/signup', {
       path: '/signup',
@@ -95,35 +95,25 @@ exports.postSignup = (req, res) => {
     });
   }
 
-  User.findOne({
-      email: email
+  bcrypt.hash(password, 12)
+    .then(hashedPassword => {
+      const user = new User({
+        email,
+        password: hashedPassword,
+        cart: {
+          items: []
+        }
+      });
+      return user.save()
     })
-    .then(userDoc => {
-      if (userDoc) {
-        req.flash('error', 'Email Exists Already. Please use a Different One.');
-        return res.redirect('/signup');
-      }
-
-      return bcrypt.hash(password, 12)
-        .then(hashedPassword => {
-          const user = new User({
-            email,
-            password: hashedPassword,
-            cart: {
-              items: []
-            }
-          });
-          return user.save()
-        })
-        .then(() => {
-          res.redirect('/');
-          return transporter.sendMail({
-            to: email,
-            from: 'kevin.m.guertin@gmail.com',
-            subject: 'Signup Succeded',
-            html: '<h1>You Successfully Signed Up!</h1>'
-          })
-        })
+    .then(() => {
+      res.redirect('/');
+      return transporter.sendMail({
+        to: email,
+        from: 'kevin.m.guertin@gmail.com',
+        subject: 'Signup Succeded',
+        html: '<h1>You Successfully Signed Up!</h1>'
+      })
     })
     .catch(err => console.log(err))
 }
