@@ -1,8 +1,9 @@
 const router = require('express').Router();
 const bcrypt = require('bcrypt')
-const User = require('../models/userModel');
 const jwt = require('jsonwebtoken');
-const { rawListeners } = require('../models/userModel');
+const auth = require('../middleware/auth')
+const User = require('../models/userModel');
+
 
 router.post('/register', async (req, res) => {
     try {
@@ -64,10 +65,35 @@ router.post('/login', async (req, res) => {
             displayName: user.displayName,
             email: user.email
         }})
-    } catch {
+    } catch (err) {
         res.status(500).json({error: err.message});
+    }
+});
+
+router.delete('/delete', auth, async (req, res) => {
+    try {
+        const deletedUser = await User.findByIdAndDelete(req.user);
+        res.json(deletedUser);
+    } catch (err) {
+        res.status(500).json({error: err.message})
     }
 })
 
+router.post("/tokenIsValid", async (req, res) => {
+    try {
+        const token = req.header('x-auth-token');
+        if (!token) return res.json(false);
+
+        const varified = jwt.verify(token, process.env.JWT_SECRET);
+        if (!varified) return res.json(false);
+
+        const user = await User.findById(varified.id);
+        if (!user) return res.json(false);
+
+        return res.json(true);
+    } catch (err) {
+        res.status(500).json({error: err.message})
+    }
+})
 
 module.exports = router
