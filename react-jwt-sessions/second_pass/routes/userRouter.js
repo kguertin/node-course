@@ -71,6 +71,7 @@ router.post('/login', async (req, res) => {
 });
 
 router.delete('/delete', auth, async (req, res) => {
+    console.log(req.user);
     try {
         const deletedUser = await User.findByIdAndDelete(req.user);
         res.json(deletedUser);
