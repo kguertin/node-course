@@ -26,7 +26,13 @@ export default function App() {
                 "x-auth-token": token
             }});
             if (tokenRes.data) {
-                
+                const userRes = await axios.get('http://localhost:5000/users/', null, {headers: {
+                    "x-auth-token": token
+                }});
+                setUserData({
+                    token,
+                    user: userRes.data
+                })
             }
         };
         checkedLoggedIn()
