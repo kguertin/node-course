@@ -55,7 +55,6 @@ exports.postAddProduct = (req, res, next) => {
     })
   }
   const imageUrl = image.path;
-  console.log(imageUrl);
 
   const product = new Product({
     title,
