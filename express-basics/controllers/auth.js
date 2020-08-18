@@ -126,7 +126,7 @@ exports.postLogin = (req, res) => {
     });
 }
 
-exports.postSignup = (req, res) => {
+exports.postSignup = (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
 

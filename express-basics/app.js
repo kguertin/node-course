@@ -27,11 +27,11 @@ const fileStorage = multer.diskStorage(
       cb(null, 'images');
     },
     filename: (rew, file, cb) => {
-      cb(null, file.filename + '_' + file.originalname);
+      cb(null, Math.floor(Math.random() * 1000000) + '_' + file.originalname);
     }
   });
 
-const fileFilter = (req, file, db) => {
+const fileFilter = (req, file, cb) => {
   if(file.mimetype === 'image/png' || file.mimetype === 'image/jpg' || file.mimetype === 'image/jpeg'){
     cb(null, true);
   } else {
@@ -95,9 +95,9 @@ app.get('/500', errorController.get500);
 app.use(errorController.get404);
 
 app.use((error, req, res, next) => {
-  res.status(500).render('500', {
+  res.status(500).render('/500', {
     pageTitle: 'Error',
-    path: '500',
+    path: '/500',
     isAuthenticated: req.session.isLoggedIn
   })
 });
