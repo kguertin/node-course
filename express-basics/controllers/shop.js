@@ -139,7 +139,6 @@ exports.getCheckout = (req, res, next) => {
       const products = user.cart.items;
       let total = 0;
       products.forEach(prod => {
-        console.log(prod.productId)
         total += prod.quantity * prod.productId.price
       })
       res.render('./shop/checkout', {
@@ -203,13 +202,6 @@ exports.getOrders = (req, res) => {
       error.httpStatusCode = 500;
       next(error);
     });
-}
-
-exports.getCheckout = (req, res) => {
-  res.render('./shop/checkout', {
-    path: '/checkout',
-    pageTitle: 'Checkout'
-  })
 }
 
 exports.getInvoice = (req, res, next) => {
