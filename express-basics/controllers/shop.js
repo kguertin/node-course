@@ -275,3 +275,34 @@ exports.getInvoice = (req, res, next) => {
   })
   .catch(err => next(err))
 }
+
+exports.getCheckoutSuccess = (req, res) => {
+  req.user.populate('cart.items.productId')
+    .execPopulate()
+    .then(user => {
+      console.log(user.cart.items)
+      const products = user.cart.items.map(i => {
+        return {
+          quantity: i.quantity,
+          product: { ...i.productId._doc
+          }
+        }
+      });
+ 
+      const order = new Order({
+        user: {
+          email: req.user.email,
+          userId: req.user
+        },
+        products: products
+      });
+      return order.save();
+    })
+    .then(() => req.user.clearCart())
+    .then(() => res.redirect('/orders'))
+    .catch(err => {
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      next(error);
+    });
+}
