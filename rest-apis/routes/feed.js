@@ -10,8 +10,8 @@ router.get('/posts', feedController.getPosts);
 router.get('/post/:postId', feedController.getPost)
 
 router.post('/post', [
-    body('title').trim().isLength({min: 7}),
+    body('title').trim().isLength({min: 5}),
     body('content').trim().isLength({min: 5})
 ], feedController.createPost)
 
-module.exports = router;
+module.exports = router; 
