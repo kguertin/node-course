@@ -34,6 +34,34 @@ exports.signup = (req, res, next) => {
             }
             next(err);
         })
+}
 
-
+exports.login = (req, res, next) => {
+    const email = req.body.email;
+    const password = req.body.password;
+    let loadedUser;
+    User.findOne({email: email})
+        .then(user => {
+            if(!user){
+                const error = new Error('This email could not be found');
+                error.statusCode = 401;
+                throw error;
+            }
+            loadedUser = user;
+            return bcrypt.compare(password, user.password);
+        })
+        .then(passMatch => {
+            if(!passMatch){
+                const error = new Error('Wrong Password');
+                error.status = 401;
+                throw error
+            }
+            console.log('success')
+        })
+        .catch(err => {
+            if(!err.statusCode){
+                err.statusCode = 500;
+            }
+            next(err);
+        })
 }
