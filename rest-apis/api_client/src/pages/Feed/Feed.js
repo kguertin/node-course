@@ -87,7 +87,8 @@ class Feed extends Component {
     fetch('http://localhost:8080/auth/status', {
       method: 'PATCH',
       headers: {
-        Authorization: `Bearer ${this.props.token}`
+        Authorization: `Bearer ${this.props.token}`,
+        "Content-Type": "application/json"
       },
       body: JSON.stringify({
         status: this.state.status
