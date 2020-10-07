@@ -44,13 +44,14 @@ class SinglePost extends Component {
         if(resData.errors) {
           throw new Error('User login failed');
         }
+        console.log(resData.data.post.imageUrl)
         this.setState({
           title: resData.data.post.title,
           author: resData.data.post.creator.name,
-          image: 'http://localhost:8080/' + resData.data.post.imageUrl,
+          image: 'http://localhost:8080/' + resData.data.post.imageUrl.split('\\').join('\\\\'),
           date: new Date(resData.data.post.createdAt).toLocaleDateString('en-US'),
           content: resData.data.post.content
-        });
+        }); 
       })
       .catch(err => {
         console.log(err);
