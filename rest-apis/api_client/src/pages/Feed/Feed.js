@@ -168,7 +168,7 @@ class Feed extends Component {
           mutation {
             createPost(postInput: {title: "${postData.title}", content: "${
             postData.content
-          }", imageUrl: "\${imageUrl}"}) {
+          }", imageUrl: "\\${imageUrl}"}) {
               _id
               title
               content
