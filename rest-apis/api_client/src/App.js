@@ -67,17 +67,16 @@ class App extends Component {
           }
         }
       `
-    }
+    };
     this.setState({ authLoading: true });
     fetch('http://localhost:8080/graphql', {
       method: 'POST',
       headers: {
-        "Content-Type": "application/json"
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify(graphqlQuery)
     })
       .then(res => {
-        console.log(res)
         return res.json();
       })
       .then(resData => {
@@ -86,12 +85,9 @@ class App extends Component {
             "Validation failed. Make sure the email address isn't used yet!"
           );
         }
-        if(resData.errors){
-          throw new Error('User Login Failed!')
+        if (resData.errors) {
+          throw new Error('User login failed!');
         }
-        console.log(resData);
-        this.setState({ isAuth: false, authLoading: false });
-        this.props.history.replace('/');
         console.log(resData);
         this.setState({
           isAuth: true,
@@ -124,17 +120,21 @@ class App extends Component {
     const graphqlQuery = {
       query: `
         mutation {
-          createUser(userInput: {email: "${authData.signupForm.email.value}", name: "${authData.signupForm.name.value}", password: "${authData.signupForm.password.value}"}) {
+          createUser(userInput: {email: "${
+            authData.signupForm.email.value
+          }", name:"${authData.signupForm.name.value}", password:"${
+        authData.signupForm.password.value
+      }"}) {
             _id
             email
           }
-        }      
+        }
       `
-    }
-    fetch('http://localhost:8080/graphql',{
+    };
+    fetch('http://localhost:8080/graphql', {
       method: 'POST',
       headers: {
-        "Content-Type": "application/json"
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify(graphqlQuery)
     })
@@ -147,8 +147,8 @@ class App extends Component {
             "Validation failed. Make sure the email address isn't used yet!"
           );
         }
-        if(resData.errors){
-          throw new Error('User Creation Failed!')
+        if (resData.errors) {
+          throw new Error('User creation failed!');
         }
         console.log(resData);
         this.setState({ isAuth: false, authLoading: false });
