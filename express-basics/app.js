@@ -12,7 +12,7 @@ const flash = require('connect-flash');
 const errorController = require('./controllers/error');
 const User = require('./models/user');
 
-const MONGODB_URI = 'mongodb+srv://kevin:node1234@cluster0-kmmuu.mongodb.net/shop';
+const MONGODB_URI = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0-kmmuu.mongodb.net/${process.env.MONGO_DEFAULT_DB}`;
 
 const app = express();
 const store = new MongoDBStore({
@@ -103,8 +103,10 @@ app.use((error, req, res, next) => {
   })
 });
 
+console.log(process.env.NODE_ENV);
+
 mongoose.connect(MONGODB_URI)
   .then(() => {
-    app.listen(3000)
+    app.listen(process.env.PORT || 3000)
   })
   .catch(err => console.log(err));
