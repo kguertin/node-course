@@ -4,7 +4,6 @@ const error = (err, req, res, next) => {
   let error = { ...err };
   error.message = err.message;
   console.log(err);
-  console.log(err.name);
 
   if (err.name === 'CastError') {
     const message = `Resource not found with id of ${err.value}`;
