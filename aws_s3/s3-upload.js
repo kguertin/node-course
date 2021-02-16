@@ -1,5 +1,6 @@
 const path = require('path');
 
+require('dotenv').config();
 const express = require('express');
 const aws = require('aws-sdk');
 const multer = require('multer');
@@ -14,7 +15,7 @@ const s3 = new aws.S3({ apiVersion: '2006-03-01' });
 const upload = multer({
   storage: multerS3({
     s3: s3,
-    bucket: 'test',
+    bucket: process.env.S3_BUCKET,
     metadata: (req, file, cb) => {
       cb(null, { fieldName: file.fieldname });
     },
