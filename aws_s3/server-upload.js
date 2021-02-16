@@ -8,7 +8,7 @@ const storage = multer.diskStorage({
   },
   filename: (req, file, cb) => {
     const { originalname } = file;
-    cb(null, originalname);
+    cb(null, `${uuid()}-${originalname}`);
   },
 });
 const upload = multer({ storage });
@@ -16,8 +16,8 @@ const upload = multer({ storage });
 const app = express();
 app.use(express.static('public'));
 
-app.post('/upload', upload.single('avatar'), (req, res) => {
-  return res.json({ status: 'ok' });
+app.post('/upload', upload.array('avatar'), (req, res) => {
+  return res.json({ status: 'ok', uploaded: req.files.length });
 });
 
 app.listen(3001, () => console.log('App is listening...'));
