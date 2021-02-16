@@ -21,7 +21,7 @@ const upload = multer({
     },
     key: (req, file, cb) => {
       const ext = path.extname(file.originalname);
-      cb(null, `${uuid}${ext}`);
+      cb(null, `${uuid()}${ext}`);
     },
   }),
 });
@@ -29,7 +29,7 @@ const upload = multer({
 app.use(express.static('public'));
 
 app.post('/upload', upload.array('avatar'), (req, res) => {
-  res.json({ status: ok, uploaded: req.files.length });
+  res.json({ status: 'ok', uploaded: req.files.length });
 });
 
 app.listen(3001, () => console.log('App is listening...'));
