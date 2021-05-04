@@ -1,6 +1,5 @@
-import { Request, Response, NextFunction } from 'express';
-import { get } from './decorators/routes';
-import { controller } from './decorators/controller';
+import { Request, Response } from 'express';
+import { controller, get } from './decorators';
 
 @controller('/auth')
 export class LoginController {
