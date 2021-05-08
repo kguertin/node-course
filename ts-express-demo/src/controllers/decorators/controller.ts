@@ -28,11 +28,13 @@ export function controller(routePrefix: string) {
 
     for (let key in target.prototype) {
       const routeHandler = target.prototype[key];
+
       const path = Reflect.getMetadata(
         MetadataKeys.path,
         target.prototype,
         key
       );
+
       const method: Methods = Reflect.getMetadata(
         MetadataKeys.method,
         target.prototype,
