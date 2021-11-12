@@ -1,12 +1,25 @@
-const crypto = require('crypto')
 
 const express = require('express');
 const app = express();
+const {Worker} = require('worker_threads')
 
 app.get('/', (req, res) => {
-  crypto.pbkdf2('a', 'b',100000, 512, 'sha512', () => {
-    res.send('Hi there');
+  const worker = new Worker(function () {
+    this.onmessage = function () {
+      let counter = 0
+
+      while(counter < 1e9) {
+        counter++
+      }
+      postMessage(counter);
+    }
   })
+
+  worker.onmessage = function(myCounter) {
+    console.log(myCounter)
+  }
+
+  worker.postMessage();
 });
 
 app.get('/fast', (req, res) => {
@@ -14,3 +27,5 @@ app.get('/fast', (req, res) => {
 });
 
 app.listen(3000);
+
+
